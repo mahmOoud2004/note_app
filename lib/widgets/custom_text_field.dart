@@ -14,6 +14,8 @@ class CustomTextField extends StatelessWidget {
         ),
         labelText: '  $text' ?? 'Note',
         hintText: 'Type something...',
+        hintStyle: TextStyle(color: const Color.fromARGB(255, 29, 180, 160)),
+        labelStyle: TextStyle(color: const Color.fromARGB(255, 29, 180, 160)),
       ),
       maxLines: maxLines,
     );
