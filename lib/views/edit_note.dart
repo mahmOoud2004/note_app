@@ -15,9 +15,15 @@ class EditNote extends StatelessWidget {
             SizedBox(height: 50),
             CustomAppbar(title: "Edit Note", icon: Icons.done),
             SizedBox(height: 16),
-            CustomTextField(text: "Title"),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: CustomTextField(text: "Title"),
+            ),
             SizedBox(height: 16),
-            CustomTextField(text: "Description", maxLines: 5),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: CustomTextField(text: "Description", maxLines: 5),
+            ),
           ],
         ),
       ),
