@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:note_app/widgets/custom_bottom.dart';
-import 'package:note_app/widgets/custom_text_field.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:note_app/cubits/add_note_cubit/add_note_cubit.dart';
+import 'package:note_app/widgets/add_note_form.dart';
 
 class AddNoteBottomsheet extends StatelessWidget {
   const AddNoteBottomsheet({super.key});
@@ -8,52 +10,24 @@ class AddNoteBottomsheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: SingleChildScrollView(child: AddNoteForm()),
-    );
-  }
-}
-
-class AddNoteForm extends StatefulWidget {
-  const AddNoteForm({super.key});
-
-  @override
-  State<AddNoteForm> createState() => _AddNoteFormState();
-}
-
-class _AddNoteFormState extends State<AddNoteForm> {
-  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-  String? title;
-  String? description;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Column(
-        children: [
-          SizedBox(height: 50),
-          CustomTextField(text: "Title", onsaved: (value) => title = value),
-          SizedBox(height: 16),
-          CustomTextField(
-            text: "description",
-            maxLines: 5,
-            onsaved: (value) => description = value,
-          ),
-          SizedBox(height: 100),
-          CustomBottom(
-            onTap: () {
-              if (formKey.currentState!.validate()) {
-                formKey.currentState!.save();
-                print(title);
-                print(description);
-              } else {
-                autovalidateMode = AutovalidateMode.always;
-              }
-            },
-          ),
-          SizedBox(height: 16),
-        ],
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: SingleChildScrollView(
+        child: BlocConsumer<AddNoteCubit, AddNoteState>(
+          listener: (context, state) {
+            if (state is AddNotefaliure) {
+              print("failed to add note: ${state.error}");
+            }
+            if (state is AddNotesuccess) {
+              Navigator.pop(context);
+            }
+          },
+          builder: (context, state) {
+            return ModalProgressHUD(
+              inAsyncCall: state is AddNoteloading ? true : false,
+              child: AddNoteForm(),
+            );
+          },
+        ),
       ),
     );
   }
