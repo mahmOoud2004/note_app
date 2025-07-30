@@ -8,10 +8,18 @@ import 'package:note_app/simple_bloc_observer.dart';
 import 'package:note_app/views/Note_view.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(NoteModelAdapter());
+  }
+
+  if (!Hive.isBoxOpen(KNoteBox)) {
+    await Hive.openBox<NoteModel>(KNoteBox);
+  }
+
   Bloc.observer = SimpleBlocObserver();
-  await Hive.openBox(KNoteBox);
-  Hive.registerAdapter(NoteModelAdapter());
   runApp(const NoteApp());
 }
 
